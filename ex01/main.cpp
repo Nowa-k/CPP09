@@ -3,12 +3,13 @@
 int main(int av, char **ac)
 {
     if (av != 2)  {
-        std::cerr << "Need only one arg ./RPN '0 + 0'" << std::endl;
+        std::cerr << "Need only one arg ./RPN '0 0 +'" << std::endl;
+        return 1;
     }
     try {
         rpn_calc(ac[1]);
-    }
-    catch (std::exception &e){
+    } catch (std::exception &e){
         std::cerr << e.what() << std::endl;
     }
+    return 0;
 }

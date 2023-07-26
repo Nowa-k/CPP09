@@ -6,7 +6,7 @@
 /*   By: aleferra <aleferra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:28:53 by aleferra          #+#    #+#             */
-/*   Updated: 2023/06/26 10:59:35 by aleferra         ###   ########.fr       */
+/*   Updated: 2023/07/26 17:04:21 by aleferra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void findBitcoinValue(std::ifstream &inpuTxt, std::map<std::string, float> &data
     std::string line;
     std::getline(inpuTxt, line);
     (void) data;
-    if (line.find("date | value") == std::string::npos){
+    if (line.find("date | value") == std::string::npos || line.length() != 12){
         std::cout << "Error: First line is false." << std::endl;
         return ;
     }
@@ -141,7 +141,9 @@ void findBitcoinValue(std::ifstream &inpuTxt, std::map<std::string, float> &data
         }
         float valueBtc;
         std::map<std::string, float>::iterator it = data.lower_bound(date);
+        it--;
         valueBtc = nbBtc * (*it).second;
+        std::cout << "Value mult : " << (*it).second << std::endl;
         std::cout << date << " => " << beforeValue << " = " << std::fixed << std::setprecision(2) << valueBtc << std::endl;
     }
 }

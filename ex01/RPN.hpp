@@ -28,19 +28,19 @@ class Operand : public std::exception {
 
 class BadConversion : public std::exception {
 			const char *what() const throw() {
-				return ("Fail to conversion.");
+				return ("Error: Fail to conversion.");
 			}
 };
 
 class Empty : public std::exception {
 			const char *what() const throw() {
-				return ("Empty arg.");
+				return ("Error: Empty arg.");
 			}
 };
 
 class Overflow : public std::exception {
 			const char *what() const throw() {
-				return ("Overflow.");
+				return ("Error: Overflow.");
 			}
 };
 #endif

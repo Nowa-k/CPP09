@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-double calcul(int first, char ope, int second){
+long int calcul(long int first, char ope, long int second){
     switch (ope){
         case '+':
             return first + second;
@@ -16,41 +16,53 @@ double calcul(int first, char ope, int second){
     return 0;
 }
 
-void do_op(std::stack<int> &value, std::stack<char> &ope) {
-    if (value.empty())
-        throw Empty();
-    if (value.size() - 1 != ope.size())
-        throw (Operand());
-    double res = value.top();
-    value.pop();
-    for (size_t index = 0; index <= value.size(); index ++){
-        res = calcul(res, ope.top(), value.top());
+void do_op(std::stack<char> &rpn) {
+    long int res = 0;
+    long int ope = 0;
+
+    if (rpn.top() >= '0' && rpn.top() <= '9')
+        res = rpn.top() - '0';
+    else
+        throw (BadInput());
+    rpn.pop();
+    while (!rpn.empty()){
+        if (rpn.top() != ' ')
+            throw (BadInput());
+        rpn.pop();
+
+        if (rpn.empty()) throw BadInput();
+        if (rpn.top() >= '0' && rpn.top() <= '9')
+            ope = rpn.top() - '0';
+        else
+            throw BadConversion();
+        rpn.pop();
+
+        if (rpn.empty()) throw BadInput();
+        if (rpn.top() != ' ')
+            throw (BadInput());
+        rpn.pop();
+
+        if (rpn.empty()) throw BadInput();
+        if (rpn.top() != '-' && rpn.top() != '+'
+            && rpn.top() != '*' && rpn.top() != '/')
+            throw (Operand());
+
+        if (rpn.empty()) throw BadInput();
+        res = calcul(res, rpn.top(), ope);
         if (res > INT_MAX || res < INT_MIN)
-            throw Overflow();
-        ope.pop();
-        value.pop();
+            throw (Overflow()); 
+        if (rpn.empty()) break;
+        rpn.pop();
     }
     std::cout << res << std::endl;
 }
 
 int rpn_calc(std::string arg){
-    std::stack<int> value;
-    std::stack<char> ope;
-
+    std::stack<char> rpn;
+    
     for (size_t index = arg.length() - 1 ; index + 1 > 0; index--){
-        if (std::isdigit(arg[index])){
-            value.push(arg[index] - '0');
-        }
-        else if (arg[index] == ' ')
-            ;
-        else if (arg[index] == '-'
-        || arg[index] == '+'
-        || arg[index] == '*'
-        || arg[index] == '/')
-            ope.push(arg[index]);
-        else
-            throw (BadInput());
+            rpn.push(arg[index]);
     }
-    do_op(value, ope);
+    do_op(rpn);
     return 1;
 }
